@@ -1,15 +1,15 @@
-import { Config } from './config';
-import { Store, Stores } from './store';
-import puppeteer from 'puppeteer';
-import open from 'open';
-import sendNotification from './notification';
-import { Logger } from './logger';
+import { Config } from "./config";
+import { Store, Stores } from "./store";
+import puppeteer from "puppeteer";
+import open from "open";
+import sendNotification from "./notification";
+import { Logger } from "./logger";
 
 /**
  * Send test email.
  */
-if (Config.notifications.test === 'true') {
-  sendNotification('test');
+if (Config.notifications.test === "true") {
+  sendNotification("test");
 }
 
 /**
@@ -25,7 +25,7 @@ async function main() {
   await Promise.all(results);
 
   Logger.info(
-    '  ♻️ trying stores again\n\n\n♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️\n\n'
+    "  ♻️ trying stores again\n\n\n♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️♻️\n\n"
   );
   setTimeout(main, Config.rateLimitTimeout);
 }
@@ -52,18 +52,18 @@ async function lookup(store: Store) {
     const graphicsCard = `${link.brand} ${link.model}`;
 
     try {
-      await page.goto(link.url, { waitUntil: 'networkidle0' });
+      await page.goto(link.url, { waitUntil: "networkidle0" });
     } catch {
       Logger.error(
-        ` ⌛ [${new Date().getMonth()}-${new Date().getDay()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}] [${
+        ` ⌛ [${new Date().getMonth()}-${new Date().getDay()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}] [\x1b[33m${
           store.name
-        }] ${graphicsCard} skipping; timed out\n`
+        }\x1b[0m] ${graphicsCard} skipping; \x1b[33mtimed out\x1b[0m\n`
       );
       await browser.close();
       return;
     }
 
-    const bodyHandle = await page.$('body');
+    const bodyHandle = await page.$("body");
     const textContent = await page.evaluate(
       (body) => body.textContent,
       bodyHandle
@@ -85,7 +85,7 @@ async function lookup(store: Store) {
       );
       Logger.info(link.url);
 
-      Logger.debug('ℹ saving screenshot');
+      Logger.debug("ℹ saving screenshot");
       await page.screenshot({ path: `success-${Date.now()}.png` });
 
       const givenUrl = store.cartUrl ? store.cartUrl : link.url;
